@@ -1,0 +1,19 @@
+#hudDisplayBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 1px black;
+    width: 55%;
+    height: 5%;
+    left: 18%;
+    top: 5%;
+    position: absolute;
+	margin: 5%;
+}
+
+#quizDisplay, #quizDisplayBox, #scoreDisplayBox, #guessBox, #healthDisplayBox, #playAgainBox{
+    visibility: hidden;
+}
+

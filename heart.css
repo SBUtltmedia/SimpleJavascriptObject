@@ -1,0 +1,9 @@
+@-webkit-keyframes heartBeat {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+
+.heartDie {
+    animation: heartBeat 1s forwards;
+}

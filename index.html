@@ -1,0 +1,86 @@
+<!--hello-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- compliance patch for microsoft browsers
+    <link rel="stylesheet" id="masterCss" type="text/css" href="css/masterStyle.css">
+    <link rel="stylesheet" id="css" type="text/css" href="css/indexCardStyle.css">
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="css_browser_selector.js"></script>
+    <script src="js/imageMapResizer.min.js"></script>
+    <script src="js/resize.js"></script>
+    <script src="js/indexCards.js"></script>
+    <script src="js/typingQuiz.js"></script>
+    <script src="js/selectorQuiz.js"></script>
+    <script src="js/init.js"></script>
+    <script src="js/DND.js"></script> -->
+    <!-- compliance patch for microsoft browsers -->
+    <!--[if lt IE 7]><script src="ie7-standard-p.js" type="text/javascript"></script><![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link rel="stylesheet" id="masterCss" type="text/css" href="css/simple.css">
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="css_browser_selector.js"></script>
+    <script src="js/resize.js"></script>
+    <script src="js/simple.js"></script>
+</head>
+
+<body>
+    <div id="stage" class="screen">
+        <ul id="buttonBox" >
+            <li id="indexCardButton">Start Index Card Mode</li>
+            <li id="typingGameButton">Start Typing Game</li>
+            <li id="selectorGameButton">Start Selector Game</li>
+        </ul>
+        <div id="quizDisplayBox">
+            <div id="quizDisplay" > </div>
+        </div>
+
+        <div id="messageDisplayBox">
+            <div id="message">
+                <div id="permMessage"></div>
+            </div>
+        </div>
+        
+        
+        <div id="guessBox">
+            <div id="guessText" >Guess:
+                <input id="textInput" type="text" align="right" /> </div>
+        </div>
+    
+        
+        <div id="healthDisplayBox"> 
+            <img id="heart1" src="Heart.svg"> 
+            <img id="heart2" src="Heart.svg"> 
+            <img id="heart3" src="Heart.svg">
+        </div>
+        
+        <div class="board">
+            <div id="leftnav">
+                <ul id="headerName"> </ul>
+                <div id="hoverButtons">
+                <ul id="layerName"> </ul>
+                </div>
+            </div>
+        </div>
+        <div id="rightnav">
+             <div id="background"> </div>
+                   <div id="displayCorrect"> </div>
+            <div id="imagemap">  <img id="picture" src="1px.png" alt="someimage"  usemap="#nav" /> </div>
+            <div id="nav" name="nav"></div>
+     
+        </div>
+<!--
+        <div id="playAgainBox">
+            <div id="playAgainText" >Play Again?</div>
+        </div>
+-->
+    </div>
+</body>
+
+</html>

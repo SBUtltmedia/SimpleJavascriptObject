@@ -1,0 +1,128 @@
+#guessBox{
+    text-align: left;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 25%;
+    height: 5%;
+    left: 12.25%;
+    top: 82.25%;
+    position: absolute;
+    visibility: hidden;
+}
+
+#healthDisplayBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 25%;
+    height: 5%;
+    left: 62.25%;
+    top: 82.25%;
+    position: absolute;
+}
+
+#heart1, #heart2, #heart3{
+    height: 100%;
+    transform-origin: 0 0;
+    top: 2.5%;
+    position: absolute;
+    visibility: visible;
+}
+
+#heart1{
+    left: 8.75%;
+}
+
+#heart2{
+    left: 41.75%;
+}
+
+#heart3{
+    left: 74.75%;
+}
+
+#playAgainBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 33.33%;
+    height: 5%;
+    left: 33.33%;
+    top: 33.33%;
+    position: absolute;
+    visibility: hidden;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+#quizDisplayBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 50%;
+    height: 5%;
+    left: 24.75%;
+    top: 10%;
+    position: absolute;
+}
+
+#quizDisplay{
+    font-family: 'Inconsolata';
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#hudDisplayBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 25%;
+    height: 3%;
+    left: 37.25%;
+    top: 15.25%;
+    position: absolute;
+}
+
+#scoreDisplayBox{
+    text-align: center;
+    line-height: 200%;
+    background-color: #3a3a3a;
+    color: white;
+    display: block;
+    border: solid 2px black;
+    width: 25%;
+    height: 5%;
+    left: 12.25%;
+    top: 82.25%;
+    position: absolute;
+}
+
+#scoreDisplay{
+    position: relative;
+	font-family: 'Inconsolata';
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#hud{
+    position: relative;
+	font-family: 'Inconsolata';
+    top: 50%;
+    transform: translateY(-50%);
+}
