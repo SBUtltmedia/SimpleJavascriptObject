@@ -263,8 +263,9 @@ var TypingGame = {
     TypingGame.messageDisplay.create();
       
     // Make a array [1...n] shufflle it
-    lettersShown = []
-    TypingGame.shuffle(lettersShown);
+    
+    lettersShown = Object.keys(Array(20).fill(1)).map(function(n){return parseInt(n)})
+    TypingGame.shuffle(TypingGame.lettersShown);
         
     console.log(lettersShown)
     },

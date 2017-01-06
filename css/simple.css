@@ -68,13 +68,17 @@
     border: solid 2px black;
     width: 25%;
     height: 5%;
-    left: 12.5%;
-    top: 82.25%;
+    left: 35%;
+    top: 17.5%;
     position: absolute;
 }
 
-#guessText{
-    
+input[type="text"]
+{
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
 }
 
 #healthDisplayBox {
