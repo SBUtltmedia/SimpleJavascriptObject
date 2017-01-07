@@ -80,6 +80,7 @@ var Simple = {
                    break;
                case "selectorGameButton":
                    SelectorGame.init();
+                   break;
            }
       });
 
@@ -152,6 +153,7 @@ var Simple = {
     damage: function(heartIndex) {
         $('#heart' + heartIndex).addClass("heartDie")
         Simple.health--;
+        console.log("hit")
     },
     
     pickLayer: function(isCorrect) {
@@ -203,6 +205,8 @@ var SelectorGame = {
     Simple.gameInit();
     SelectorGame.pickLayer(true);
     $(".map").unbind("click").click(function(evt){SelectorGame.clickedItem(evt)})
+
+    
     },
     
     clickedItem: function(evt){
@@ -256,27 +260,26 @@ var TypingGame = {
     animationFramID:0,
     
     init: function(){
-    Simple.destory();
-    Simple.gameInit();
-    $("#guessBox").css({visibility: "visible"})
-    TypingGame.pickLayer(true);
-    TypingGame.messageDisplay.create();
-      
-    // Make a array [1...n] shufflle it
-    
-    lettersShown = Object.keys(Array(20).fill(1)).map(function(n){return parseInt(n)})
-    TypingGame.shuffle(TypingGame.lettersShown);
+        Simple.destory();
+        Simple.gameInit();
+        $("#guessBox").css({visibility: "visible"})
+        TypingGame.pickLayer(true)
+        TypingGame.messageDisplay.create();
+     
+        // Make a array [1...n] shufflle it
+        lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
         
-    console.log(lettersShown)
-    },
+        $("#userInput").focus();
+        console.log(lettersShown)
+        TypingGame.pickLetter();
+        $("#userInput").unbind("keyup").keyup(function(evt){TypingGame.typedLetter(evt)})
+        },
     
     pickLayer: function(isCorrect) {
         var isTemp = false;
         TypingGame.questionStartTime = new Date().getTime();   
         if(Simple.pickLayer(isCorrect)) Simple.setMessage("What is the highlighted layer on the right?", isTemp)
-        TypingGame.answerString = Array(Simple.choiceLayer.lname.length).fill("*")
-        TypingGame.highlightPicture();
-        TypingGame.pickLetter();
+        TypingGame.answerString = Simple.choiceLayer.lname.replace(/[^ ]/g,"*").split('')
     },
     
     highlightPicture: function() {
@@ -294,33 +297,62 @@ var TypingGame = {
             $("#guessMessage").remove();
         }
     },
-    
+    typedLetter:function(evt){
+        var inputText=$("#userInput").val().split('');
+        var lastIndex =inputText.length-1
+        
+      
+        if(inputText[lastIndex]==Simple.choiceLayer.lname.split('')[lastIndex]){
+      console.log(inputText,inputText[lastIndex],Simple.choiceLayer.lname.split('')[lastIndex])
+            TypingGame.answerString[lastIndex] =inputText[lastIndex]
+              $("#guessMessage").html(TypingGame.answerString.join(""));
+        }
+        
+    },
     pickLetter: function() {
         
         var currTime = new Date().getTime();
         // console.log(currTime)
         if (currTime >= TypingGame.lastTime + TypingGame.delaySecs*1000)  {
             
-         TypingGame.answerString[lettersShown[0]] = Simple.choiceLayer.lname[lettersShown[0]]
-         lettersShown.shift();
-            console.log(lettersShown.length)
+            TypingGame.answerString[lettersShown[0]] = Simple.choiceLayer.lname[lettersShown[0]];
+            lettersShown.shift();
+            console.log(lettersShown.length);
+            console.log(Simple.choiceLayer.lname);
             TypingGame.lastTime = currTime;
+            TypingGame.highlightPicture();
             console.log(TypingGame.answerString.join(""))
             $("#guessMessage").html(TypingGame.answerString.join(""));
+            
         }     // one second has passed, run some code here
         
         if (lettersShown.length == 0) {
+            Simple.damage(Simple.health,Simple.layerIndex);
             if(Simple.health == 0) {
                 Simple.lostGame();
+                return;
             }
-            Simple.damage(Simple.health,Simple.layerIndex);
+            // Pick a new object
+            $("#image-" + Simple.choiceLayer.id).css({display: "none"}) 
             TypingGame.pickLayer(true);
-            
+            lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
+            TypingGame.pickLetter();
         } else {
-             TypingGame.animationFramID = window.requestAnimationFrame(TypingGame.pickLetter)
+             TypingGame.animationFramID = window.requestAnimationFrame(TypingGame.pickLetter);
         }
     },
     
+        
+    compare: function() {
+        var userType = $("#userInput");
+        
+        if(userType == Simple.choiceLayer.lname) {
+            TypingGame.pickLayer(true);
+            lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
+            TypingGame.pickLetter();
+        }
+    },
+
     
     destory: function() {
         $(".map").unbind("click");
@@ -361,6 +393,8 @@ var IndexGame = {
      
 }                                         
 }
+
+
 
 
 $(function () { 
