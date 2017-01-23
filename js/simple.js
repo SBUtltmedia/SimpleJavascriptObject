@@ -1,3 +1,5 @@
+//Click destory typing game
+
 var Simple = {
     layerInfo: {}, 
     health: 3,
@@ -5,7 +7,6 @@ var Simple = {
     layerIndex:0,
     layersLeft:[],
     choiceLayer:{},
-
     
     init: function () {
         $('#nav').load("map.html", function () {
@@ -20,17 +21,30 @@ var Simple = {
         
     Simple.health = 3;    
     Simple.layersLeft = Simple.layerInfo.layers.slice(1)
+    Simple.refreshLayerNames();
     $("#heart1, #heart2, #heart3").removeClass("heartDie")
     $("#displayCorrect img").css({display:"none"});
     $("#layerName li").css({display: "none"})
     $("#healthDisplayBox").css({visibility: "visible"})
     $("#heart1, #heart2, #heart3").css({visibility: "visible"})  
+    
     },
     
+    refreshLayerNames:function(){
+        console.log("refresh",Simple.layerInfo.layers)
+     Simple.layerInfo.layers.forEach(function (item, index) {
+          console.log(item.id,item.lname)
+          $("#"+item.id).html(item.lname);
+          
+          
+      })   
+        
+        
+        
+    },
     
     populateLayerDivs: function (info) {
         $(info.layers).each(function (index, item) {
-            console.log(index)
             var Objli = $('<li></li>');
             Objli.text(item.lname)
             Objli.attr("id", item.id)
@@ -112,8 +126,6 @@ var Simple = {
             {
           picname = "1px.png";
             }
-        //console.log(picNum,event.type)
-      
 
         picEl.attr("src", picname);
         $("#" + currentSelection ).css({
@@ -128,6 +140,13 @@ var Simple = {
              var tempDiv= $('<div>'+message+'</div>');
              tempDiv.attr("id", "tempMessage")   
             $("#message").append(tempDiv);
+            $("#permMessage").css("visibility", "hidden");
+            Simple.clickBlocker.create();
+                
+            $("#tempMessage").stop().fadeTo( 2000 , 0, function() {
+                Simple.clickBlocker.destory();
+                $("#permMessage").css("visibility", "visible");
+            })
             }
             else{
             $("#permMessage").stop().fadeTo( 5 , 0, function() {
@@ -141,11 +160,14 @@ var Simple = {
     
     wonGame: function() {
         Simple.overlay.create("You Won!");
+        Simple.destory();
         IndexGame.init();
+        return;
     },
     
     lostGame: function() {
         Simple.overlay.create("You Lost!");
+        Simple.destory();
         IndexGame.init();
         return;
     },
@@ -153,20 +175,19 @@ var Simple = {
     damage: function(heartIndex) {
         $('#heart' + heartIndex).addClass("heartDie")
         Simple.health--;
-        console.log("hit")
     },
     
     pickLayer: function(isCorrect) {
         if(Simple.layersLeft.length == 0) {
             Simple.wonGame();
             return false;
-    }
+        }
         if(isCorrect){
             Simple.layerIndex = Math.floor(Math.random() * Simple.layersLeft.length)
         }
         Simple.choiceLayer = Simple.layersLeft[Simple.layerIndex];
         var isTemp=false;
-       return true;
+        return true;
     },
     
     overlay: {
@@ -178,9 +199,10 @@ var Simple = {
             layerOverlay.attr("class", "overlay")
             
             layerOverlay.load("overlay.htm", function(){
-                 $("#overlayText").text(text)
+                 $("#overlayText").text(text);
                  $('#overlayButton').click(function() {
-                     Simple.overlay.destroy();       
+                     Simple.overlay.destroy();   
+                     Simple.destory();
                  }
                  )
             })
@@ -189,6 +211,19 @@ var Simple = {
         destroy: function() {
             $("#overlay").remove();
         }
+    },
+    
+    clickBlocker: {
+        create: function() {
+            var blocker = $('<div></div>');
+            $("#stage").append(blocker);
+            blocker.attr("id", "blocker");
+        },
+        
+        destory: function() {
+            $("#blocker").remove();
+        }
+
     },
     
     destory: function() {
@@ -228,7 +263,7 @@ var SelectorGame = {
             Simple.setMessage("Please try again", isTemp)
             $("#tempMessage").css("background-color", "red")
             isCorrect = false;
-            Simple.damage(Simple.health,Simple.layerIndex)
+            Simple.damage(Simple.health, Simple.layerIndex)
             
             if(Simple.health == 0) {
                 Simple.lostGame();
@@ -248,86 +283,108 @@ var SelectorGame = {
         var isTemp=false;
         if(Simple.pickLayer(isCorrect)) Simple.setMessage("Please select: <span class='blink'>" + Simple.choiceLayer.lname+"</span>",isTemp )
     }
-
 }
 
 var TypingGame = {
     lettersShown:[],
     lastTime:0,
     answerString: "",
-    delaySecs:1,
+    delaySecs:2,
     questionStartTime:0,
     animationFramID:0,
     
-    init: function(){
+    init: function() {
         Simple.destory();
         Simple.gameInit();
         $("#guessBox").css({visibility: "visible"})
-        TypingGame.pickLayer(true)
-        TypingGame.messageDisplay.create();
+        TypingGame.pickLayer(true);
      
         // Make a array [1...n] shufflle it
-        lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
+        
         
         $("#userInput").focus();
-        console.log(lettersShown)
+        $("#userInput").on('blur',function(){ 
+        
+        
+        $("#userInput").focus();
+        })
         TypingGame.pickLetter();
-        $("#userInput").unbind("keyup").keyup(function(evt){TypingGame.typedLetter(evt)})
+        $("#userInput").unbind("keydown").keydown(function(evt){TypingGame.typedLetter(evt)})
         },
     
+    
     pickLayer: function(isCorrect) {
+        TypingGame.guessMessageDisplay.destroy();
+        $("#userInput").val("")
+        TypingGame.lastTime=0; 
         var isTemp = false;
-        TypingGame.questionStartTime = new Date().getTime();   
-        if(Simple.pickLayer(isCorrect)) Simple.setMessage("What is the highlighted layer on the right?", isTemp)
+        TypingGame.questionStartTime = new Date().getTime();
+        window.cancelAnimationFrame(TypingGame.animationFramID);
+        
+        if(Simple.pickLayer(isCorrect)) {
+            Simple.setMessage("What is the highlighted layer on the right?", isTemp)
+        }
+        $("#" + Simple.choiceLayer.id).css({display: "block"})
+        $("#" + Simple.choiceLayer.id).text("")
+        TypingGame.lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
         TypingGame.answerString = Simple.choiceLayer.lname.replace(/[^ ]/g,"*").split('')
+        TypingGame.pickLetter();
     },
     
     highlightPicture: function() {
           $("#image-" + Simple.choiceLayer.id).css({display: "block"}) 
     },
     
-    messageDisplay: {
-        create: function(text) {
-            var messageDisplay = $('<div></div>');
-            $("#messageDisplayBox").append(messageDisplay)
-            messageDisplay.attr("id", "guessMessage")    
+    guessMessageDisplay: {
+        showMessage: function(message){
+            $("#" + Simple.choiceLayer.id).text(message);  
         },
         
         destroy: function() {
-            $("#guessMessage").remove();
+            window.cancelAnimationFrame(TypingGame.animationFramID);
         }
     },
-    typedLetter:function(evt){
-        var inputText=$("#userInput").val().split('');
-        var lastIndex =inputText.length-1
+    
+    typedLetter: function(evt){
+        var isTemp=true;
+        var inputText = document.getElementById("userInput").value.toLowerCase();
+        var lastIndex = inputText.length-1
         
-      
-        if(inputText[lastIndex]==Simple.choiceLayer.lname.split('')[lastIndex]){
-      console.log(inputText,inputText[lastIndex],Simple.choiceLayer.lname.split('')[lastIndex])
-            TypingGame.answerString[lastIndex] =inputText[lastIndex]
-              $("#guessMessage").html(TypingGame.answerString.join(""));
+        if(inputText[lastIndex] == Simple.choiceLayer.lname.split('')[lastIndex]) {
+            TypingGame.answerString[lastIndex] = inputText[lastIndex]
+            $("#" + Simple.choiceLayer.id).text(TypingGame.answerString.join(""));
         }
-        
-    },
-    pickLetter: function() {
-        
-        var currTime = new Date().getTime();
-        // console.log(currTime)
-        if (currTime >= TypingGame.lastTime + TypingGame.delaySecs*1000)  {
+              
+        if (inputText == Simple.choiceLayer.lname) {
+
+            Simple.setMessage("Correct!", isTemp)
+           // $("#" + Simple.choiceLayer.id).css({display: "block"})
+            $("#tempMessage").css("background-color", "green")
             
-            TypingGame.answerString[lettersShown[0]] = Simple.choiceLayer.lname[lettersShown[0]];
-            lettersShown.shift();
-            console.log(lettersShown.length);
-            console.log(Simple.choiceLayer.lname);
+            $("#image-" + Simple.choiceLayer.id).css({display: "none"}) 
+            Simple.layersLeft.splice(Simple.layerIndex, 1)
+            
+            TypingGame.pickLayer(true);
+        }      
+    },
+    
+    
+
+    pickLetter: function() {
+        var currTime = new Date().getTime();
+        
+        if (currTime >= TypingGame.lastTime + TypingGame.delaySecs*1000)  {
+            var shufflePick= TypingGame.lettersShown[0];
+            TypingGame.answerString[shufflePick] = Simple.choiceLayer.lname[shufflePick];
+            TypingGame.lettersShown.shift();
             TypingGame.lastTime = currTime;
             TypingGame.highlightPicture();
-            console.log(TypingGame.answerString.join(""))
-            $("#guessMessage").html(TypingGame.answerString.join(""));
+            TypingGame.guessMessageDisplay.showMessage(TypingGame.answerString.join(""));
             
         }     // one second has passed, run some code here
         
-        if (lettersShown.length == 0) {
-            Simple.damage(Simple.health,Simple.layerIndex);
+        if (TypingGame.lettersShown.length == 0) {
+            Simple.damage(Simple.health, Simple.layerIndex);
             if(Simple.health == 0) {
                 Simple.lostGame();
                 return;
@@ -335,30 +392,20 @@ var TypingGame = {
             // Pick a new object
             $("#image-" + Simple.choiceLayer.id).css({display: "none"}) 
             TypingGame.pickLayer(true);
-            lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
-            TypingGame.pickLetter();
-        } else {
+        } else {    
+            window.cancelAnimationFrame(TypingGame.animationFramID);
+            
              TypingGame.animationFramID = window.requestAnimationFrame(TypingGame.pickLetter);
         }
     },
     
-        
-    compare: function() {
-        var userType = $("#userInput");
-        
-        if(userType == Simple.choiceLayer.lname) {
-            TypingGame.pickLayer(true);
-            lettersShown = TypingGame.shuffle(Array.from(Array(Simple.choiceLayer.lname.length).keys()))
-            TypingGame.pickLetter();
-        }
-    },
 
     
     destory: function() {
+        TypingGame.guessMessageDisplay.destroy();
         $(".map").unbind("click");
-        TypingGame.messageDisplay.destroy();
+     
         $("#guessBox").css({visibility: "hidden"})
-        window.cancelAnimationFrame(TypingGame.animationFramID);
     },
     
     shuffle: function (array) {
@@ -384,6 +431,7 @@ var TypingGame = {
 var IndexGame = {
  init: function(){
     Simple.destory();
+    Simple.gameInit();
     var indexMessage = "Hover over a piece of the image to highlight the name on the left";
     $("#layerName li").css({display: "block"})
     $("#healthDisplayBox").css({visibility: "hidden"})
@@ -393,8 +441,6 @@ var IndexGame = {
      
 }                                         
 }
-
-
 
 
 $(function () { 

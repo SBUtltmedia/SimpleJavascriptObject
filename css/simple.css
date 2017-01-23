@@ -15,7 +15,6 @@
 
 #tempMessage {
     position: absolute;
-    animation: fade 3s forwards;
     width: 100%;
     height: 100%;
     background-color: red;
@@ -55,7 +54,7 @@
     margin: 5%;
 }
 
-#guessMessage, #userInput {
+#userInput {
     font-family: 'Roboto Mono', monospace;
     font-size: 100%;
     text-align: left;
@@ -66,18 +65,19 @@
     line-height: 200%;
     color: white;
     display: block;
-    border: solid 2px black;
-    width: 55%;
+    width: 30%;
     height: 5%;
-    left: 23%;
-    top: 16.8%;
+    left: 59.5%;
+    bottom: 19%;
     position: absolute;
+    text-align: center;
 }
 
 #userInput
 {
     background: transparent;
     border: none;
+    text-align: center;
 }
 
 #healthDisplayBox {
@@ -93,6 +93,7 @@
     top: 82.25%;
     position: absolute;
 }
+
 
 #heart1,
 #heart2,
@@ -123,7 +124,6 @@
 }
 
 body {
-    user-select: none;
     font-size: 5rem;
 }
 
@@ -200,14 +200,6 @@ li {
     position: relative;
     font-family: 'Inconsolata';
     top: 50%;
-    transform: translateY(-50%);
-}
-
-#guessText {
-    position: relative;
-    font-family: 'Inconsolata';
-    top: 50%;
-    left: 2.5%;
     transform: translateY(-50%);
 }
 
@@ -343,9 +335,15 @@ li {
     opacity: 0.9;
 }
 
-#overlayButton:hover {
+#overlayButton: hover {
     color: whitesmoke;
     opacity: 1
+}
+
+#blocker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 #rightnav {
